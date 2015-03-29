@@ -28,7 +28,9 @@ describe('Elasticsearch Connection', function() {
           async.forEach(dummies, function(item, cb) {
             item.save(cb);
           }, function() {
-            setTimeout(done, config.indexingTimeout);
+            var client = new elasticsearch.Client();
+
+            client.indices.refresh(done);
           });
         });
       });
@@ -101,7 +103,7 @@ describe('Elasticsearch Connection', function() {
 });
 
 function tryDummySearch(model, cb) {
-  setTimeout(function() {
+  model.esClient.indices.refresh(function() {
     model.search({
       query_string: {
         query: 'Text1'
@@ -115,6 +117,6 @@ function tryDummySearch(model, cb) {
       model.esClient.close();
       cb(err);
     });
-  }, config.indexingTimeout);
+  });
 
 }

@@ -40,7 +40,7 @@ describe('Highlight search', function() {
             })
           ];
           async.forEach(texts, config.saveAndWaitIndex, function() {
-            setTimeout(done, config.indexingTimeout);
+            Text.refresh(done);
           });
         });
       });

@@ -100,7 +100,7 @@ describe('GeoTest', function() {
   });
 
   it('should be able to find geo coordinates in the indexes', function(done) {
-    setTimeout(function() {
+    GeoModel.refresh(function() {
       // ES request
       GeoModel.search({
         match_all: {}
@@ -111,7 +111,7 @@ describe('GeoTest', function() {
         res.hits.hits[0]._source.frame.coordinates.should.eql([[1, 4], [3, 2]]);
         done();
       });
-    }, 1100);
+    });
   });
 
   it('should be able to resync geo coordinates from the database', function(done) {
@@ -127,7 +127,7 @@ describe('GeoTest', function() {
         stream.on('close', function() {
           count.should.eql(2);
 
-          setTimeout(function() {
+          GeoModel.refresh(function() {
             GeoModel.search({
               match_all: {}
             }, {sort: 'myId:asc'}, function(err, res) {
@@ -137,7 +137,7 @@ describe('GeoTest', function() {
               res.hits.hits[0]._source.frame.coordinates.should.eql([[1, 4], [3, 2]]);
               done();
             });
-          }, 1000);
+          });
         });
       });
     });
@@ -162,7 +162,7 @@ describe('GeoTest', function() {
       }
     };
 
-    setTimeout(function() {
+    GeoModel.refresh(function() {
       GeoModel.search(geoQuery, function(err, res) {
         if (err) throw err;
         res.hits.total.should.eql(1);
@@ -187,7 +187,7 @@ describe('GeoTest', function() {
           });
         });
       });
-    }, 1000);
+    });
   });
 
 });
